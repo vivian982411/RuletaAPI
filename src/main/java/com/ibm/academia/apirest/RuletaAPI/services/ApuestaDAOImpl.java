@@ -53,10 +53,12 @@ public class ApuestaDAOImpl extends GenericoDAOImpl<Apuesta, ApuestaRepository> 
         Ruleta ruleta=optionalRuleta.get();
 
         if (ruleta.getSaldo()<0)
-            throw new BadRequestException("No se puede apostar en la ruleta");
+            throw new BadRequestException("No se puede apostar en la ruleta, saldo agotado");
+
+        if(ruleta.getEstado().equalsIgnoreCase("cerrada"))
+            throw new BadRequestException("No se puede apostar en la ruleta, se encuentra cerrada");
 
         Apuesta apuesta= new Apuesta(null, cantidad, numero, color, ruleta);
-
 
         if ((tapete.girarRuleta(numero, color))) {
             apuesta.setResultado("Ganador");
